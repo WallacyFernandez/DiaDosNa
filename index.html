@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Day Flip Book</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="hedlinecontainer">
+    <div id="shine">Feliz Dia dos Namorados💞</div>
+  </div>
+  
+  <!-- Custom Music Player with Spotify Look -->
+  <div class="music-container">
+    <!-- Hidden Audio Element -->
+    <audio id="localAudio" preload="auto" autoplay loop>
+      <source src="Vem Cá - Pelé MilFlows (Prod. Volp _ Rafa Valle)(M4A_128K).m4a" type="audio/mp4">
+    </audio>
+    
+         <!-- Start Experience Button (shows when autoplay is blocked) -->
+     <div id="startExperience" class="start-experience" style="display: none;">
+       <button id="startBtn" class="start-btn">
+         🎵 Iniciar Experiência Musical 💞
+       </button>
+     </div>
+
+     <!-- Spotify-like Player -->
+     <div class="spotify-player-custom" id="musicPlayer">
+       <div class="spotify-header">
+         <div class="spotify-logo">
+           <svg width="24" height="24" viewBox="0 0 24 24" fill="#1db954">
+             <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 17.568c-.231.391-.721.518-1.109.292-3.037-1.855-6.866-2.275-11.374-1.246-.436.099-.871-.201-.97-.637-.1-.435.2-.87.636-.969 4.901-1.119 9.128-.644 12.525 1.438.39.226.517.715.292 1.122zm1.586-3.534c-.29.489-.908.646-1.378.356-3.474-2.137-8.768-2.757-12.876-1.509-.547.166-1.126-.122-1.292-.669-.165-.546.123-1.125.669-1.291 4.696-1.427 10.548-.736 14.521 1.735.468.29.624.908.356 1.378zm.137-3.677c-4.166-2.474-11.036-2.703-15.018-1.495-.653.198-1.342-.173-1.54-.826-.197-.653.174-1.342.827-1.54 4.563-1.384 12.161-1.119 16.866 1.733.565.343.745 1.078.402 1.643-.343.566-1.077.745-1.537.485z"/>
+           </svg>
+         </div>
+         <div class="track-info">
+           <div class="track-title">Vem Cá</div>
+           <div class="track-artist">Altamira, Pelé MilFlows</div>
+         </div>
+       </div>
+      
+      <div class="player-controls">
+        <button id="playPauseBtn" class="play-pause-btn">
+          <svg id="playIcon" width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <svg id="pauseIcon" width="24" height="24" viewBox="0 0 24 24" fill="white" style="display: none;">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="progress-container">
+        <span id="currentTime" class="time">0:00</span>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span id="duration" class="time">2:46</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery">
+    <img src="IMG_20250510_214701.jpg" alt="a lovely kiss in the night">
+    <img src="IMG_20250427_163543.jpg" alt="a women inside a car">
+    <img src="IMG_20250122_181350.jpg" alt="a baby">
+    <img src="IMG_20241225_191829.jpg" alt="a girl in the forest">
+    <img src="IMG_20241220_125901.jpg" alt="a girl">
+  </div>
+
+  <script>
+    const audio = document.getElementById('localAudio');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+    const startExperience = document.getElementById('startExperience');
+    const startBtn = document.getElementById('startBtn');
+    const musicPlayer = document.getElementById('musicPlayer');
+
+    let isPlaying = false;
+    let autoplayAttempted = false;
+
+    // Function to format time
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = Math.floor(seconds % 60);
+      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    // Start music function
+    function startMusic() {
+      audio.play().then(() => {
+        // Autoplay successful
+        startExperience.style.display = 'none';
+        musicPlayer.style.display = 'block';
+      }).catch(() => {
+        // Autoplay blocked - show start button
+        if (!autoplayAttempted) {
+          startExperience.style.display = 'block';
+          musicPlayer.style.display = 'none';
+        }
+      });
+      autoplayAttempted = true;
+    }
+
+    // Start button click
+    startBtn.addEventListener('click', () => {
+      startMusic();
+    });
+
+    // Play/Pause functionality
+    playPauseBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+    });
+
+    // Audio event listeners
+    audio.addEventListener('play', () => {
+      isPlaying = true;
+      playIcon.style.display = 'none';
+      pauseIcon.style.display = 'block';
+      startExperience.style.display = 'none';
+      musicPlayer.style.display = 'block';
+    });
+
+    audio.addEventListener('pause', () => {
+      isPlaying = false;
+      playIcon.style.display = 'block';
+      pauseIcon.style.display = 'none';
+    });
+
+    // Update progress and time
+    audio.addEventListener('timeupdate', () => {
+      const progress = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = `${progress}%`;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    // Set duration when metadata loads
+    audio.addEventListener('loadedmetadata', () => {
+      durationEl.textContent = formatTime(audio.duration);
+    });
+
+    // Click on progress bar to seek
+    progressBar.addEventListener('click', (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const percentage = clickX / width;
+      audio.currentTime = percentage * audio.duration;
+    });
+
+    // Try multiple autoplay strategies
+    function attemptAutoplay() {
+      // Strategy 1: Direct autoplay
+      startMusic();
+      
+      // Strategy 2: On any user interaction
+      document.addEventListener('click', startMusic, { once: true });
+      document.addEventListener('touchstart', startMusic, { once: true });
+      document.addEventListener('keydown', startMusic, { once: true });
+      
+      // Strategy 3: On scroll
+      window.addEventListener('scroll', startMusic, { once: true });
+    }
+
+    // Try autoplay when page loads
+    window.addEventListener('load', () => {
+      setTimeout(attemptAutoplay, 100);
+    });
+
+    // Try autoplay immediately
+    attemptAutoplay();
+  </script>
+
+</body>
+</html>
